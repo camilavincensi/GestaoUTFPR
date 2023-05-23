@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import Topo from "./componentes/Topo";
 
 export default function Inicio({ navigation, route }) {
 
@@ -14,19 +15,7 @@ export default function Inicio({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <SafeAreaView style={styles.containerTopo}>
-                <View style={styles.userContainer}>
-                    <Text style={styles.textoTopo}>Olá,</Text>
-                    <Text style={[styles.textoTopo, styles.negrito]}>{nome}!</Text>
-                </View>
-                <Text style={styles.textoTopo}>Compras e Contratações UTFPR</Text>
-                <View style={styles.iconContainer}>
-                    <Image
-                        source={require('../Imagens/user.png')}
-                    />
-                </View>
-            </SafeAreaView>
-
+            <Topo route={route}/>
             <View style={styles.dropdownContainer}>
                 <Picker
                     selectedValue={selectedEmpresa}
@@ -37,8 +26,7 @@ export default function Inicio({ navigation, route }) {
                     mode={'dropdown'}
                     itemStyle={{ color: 'white' }}
                 >
-
-                    <Picker.Item style={styles.dropdown} label="UTFPR - Todos" value="All" />
+                    <Picker.Item key={0} style={styles.dropdown} label="UTFPR - Todos" value="All" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Dois Vizinhos" value="DV" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
@@ -60,44 +48,28 @@ export default function Inicio({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+
     backgoud: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        //justifyContent: 'center',
         backgroundColor: '#f3f2f2'
     },
-    containerTopo: {
-        backgroundColor: '#FFCF57',
-        flex: 0.3,
-        justifyContent: 'center',
-        width: '100%',
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40
-    },
-    userContainer: {
-        flexDirection: 'row',
-    },
-    textoTopo: {
-        fontSize: 17,
-        paddingLeft: 10,
-        justifyContent: 'center',
-    },
-    negrito: {
-        fontWeight: 'bold'
-    },
+
     dropdownContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
         paddingHorizontal: 20,
-        borderRadius: 10,
+        //borderRadius: 10,
     },
     dropdown: {
         height: 50,
         width: '80%',
         backgroundColor: '#585666',
-        color: '#fff',
+        //color: '#fff',
         fontSize: 17,
+        borderRadius: 20
     },
     iconContainer: {
         alignItems: 'flex-end',

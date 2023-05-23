@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getDatabase, ref, query, equalTo, get } from "firebase/database";
+import Topo from "./componentes/Topo";
 
 export default function Compra({ navigation, route }) {
 
@@ -69,18 +70,7 @@ export default function Compra({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <View style={styles.containerTopo}>
-                <View style={styles.userContainer}>
-                    <Text style={styles.textoTopo}>Olá,</Text>
-                    <Text style={[styles.textoTopo, styles.negrito]}>{nome}!</Text>
-                </View>
-                <Text style={styles.textoTopo}>Compras e Contratações UTFPR</Text>
-                <View style={styles.iconContainer}>
-                    <Image
-                        source={require('../Imagens/user.png')}
-                    />
-                </View>
-            </View>
+            <Topo route={route}/>
 
             <View style={styles.dropdownContainer}>
                 <Picker
@@ -146,26 +136,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#f3f2f2'
-    },
-    containerTopo: {
-        backgroundColor: '#FFCF57',
-        flex: 0.3,
-        textAlign: 'left',
-        justifyContent: 'center',
-        width: '100%',
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40
-    },
-    userContainer: {
-        flexDirection: 'row',
-    },
-    textoTopo: {
-        fontSize: 17,
-        paddingLeft: 15,
-        justifyContent: 'center',
-    },
-    negrito: {
-        fontWeight: 'bold'
     },
     iconContainer: {
         alignItems: 'flex-end',

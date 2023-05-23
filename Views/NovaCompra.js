@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, TextInput, Modal, Keyboard } from 'react-native';
 import { getDatabase, ref, set, push } from "firebase/database";
+import Topo from "./componentes/Topo";
 
 export default function NovaCompra({ navigation, route }) {
     const { nome, empresaSelecionada } = route.params;
@@ -53,19 +54,7 @@ export default function NovaCompra({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <View style={styles.containerTopo}>
-                <View style={styles.userContainer}>
-                    <Text style={styles.textoTopo}>Olá,</Text>
-                    <Text style={[styles.textoTopo, styles.negrito]}>{nome}!</Text>
-                </View>
-                <Text style={styles.textoTopo}>Compras e Contratações UTFPR</Text>
-                <Text style={styles.textoTopo}>Voce esta comprando para a empresa {label}</Text>
-                <View style={styles.iconContainer}>
-                    <Image
-                        source={require('../Imagens/user.png')}
-                    />
-                </View>
-            </View>
+            <Topo route={route}/>
 
             <View style={styles.container}>
                 <Text style={styles.texto}>Nome do solicitante</Text>
@@ -111,27 +100,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#f3f2f2'
     },
-    containerTopo: {
-        backgroundColor: '#FFCF57',
-        flex: 0.3,
-        textAlign: 'left',
-        justifyContent: 'center',
-        width: '100%',
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40
-    },
-    userContainer: {
-        flexDirection: 'row',
-    },
-    textoTopo: {
-        fontSize: 17,
-        paddingLeft: 15,
-        justifyContent: 'center',
-    },
-    negrito: {
-        fontWeight: 'bold',
-        fontSize: 17,
-    },
+
     iconContainer: {
         alignItems: 'flex-end',
         justifyContent: 'flex-end',
