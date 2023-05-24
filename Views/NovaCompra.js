@@ -34,27 +34,30 @@ export default function NovaCompra({ navigation, route }) {
     }, []);
 
     const salvarInformacoes = () => {
+        const informacoesRef = push(ref(database, "empresas/" + value));
+        const uid = informacoesRef.key;
         const dados = {
             nomeSolicitante,
             departamento,
             descricaoSolicitacao,
             observacao,
+            uid
         };
-
-        const informacoesRef = push(ref(database, "empresas/" + value));
 
         set(informacoesRef, dados)
             .then(() => {
                 console.log("Informações salvas com sucesso!");
+                alert("Informações salvas com sucesso!");
             })
             .catch((error) => {
                 console.log("Erro ao salvar as informações:", error);
+                alert("Erro ao salvar as informações");
             });
     };
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <Topo route={route} navigation={navigation}/>
+            <Topo route={route} navigation={navigation} />
 
             <View style={styles.container}>
                 <Text style={styles.texto}>Nome do solicitante</Text>
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
     backgoud: {
         flex: 1,
         alignItems: 'center',
-       // justifyContent: 'center',
+        // justifyContent: 'center',
         backgroundColor: '#f3f2f2'
     },
 
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-      //  justifyContent: 'center',
+        //  justifyContent: 'center',
         width: '80%',
         marginHorizontal: 15,
         marginTop: 15
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-       // alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'space-between',
         width: '95%',
         //position: 'absolute',
