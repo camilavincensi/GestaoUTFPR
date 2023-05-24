@@ -5,6 +5,10 @@ import LoginScreen from '../ProjPD/Views/Login';
 import Inicio from '../ProjPD/Views/Inicio';
 import Compra from '../ProjPD/Views/Compra';
 import NovaCompra from '../ProjPD/Views/NovaCompra';
+import Dados from "./Views/Dados";
+import NovaContratacao from "./Views/NovaContratacao";
+import Contratacao from "./Views/Contratacao";
+import MinhasSolicitacoes from "./Views/MinhasSolicitacoes";
 
 const Stack = createStackNavigator();
 
@@ -23,8 +27,24 @@ function MyStack() {
         options={{
           headerShown: false,
         }} />
+        <Stack.Screen name="Contratacao" component={Contratacao}
+          options={{
+          headerShown: false,
+        }} />
       <Stack.Screen name="NovaCompra" component={NovaCompra}
         options={{
+          headerShown: false,
+        }} />
+        <Stack.Screen name="NovaContratacao" component={NovaContratacao}
+          options={{
+          headerShown: false, // Oculta o cabeçalho
+        }} />
+        <Stack.Screen name="Dados" component={Dados}
+          options={{
+          headerShown: false,
+        }} />
+        <Stack.Screen name="MinhasSolicitacoes" component={MinhasSolicitacoes}
+          options={{
           headerShown: false,
         }} />
     </Stack.Navigator>

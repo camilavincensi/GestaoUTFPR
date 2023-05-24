@@ -11,11 +11,15 @@ export default function Inicio({ navigation, route }) {
         navigation.navigate("Compra", { nome, selectedEmpresa })
     };
 
+    const contratacao = () => {
+        navigation.navigate("Contratacao", { nome, selectedEmpresa })
+    };
+
     const [selectedEmpresa, setSelectedEmpresa] = useState('Todos');
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <Topo route={route}/>
+            <Topo route={route} navigation={navigation}/>
             <View style={styles.dropdownContainer}>
                 <Picker
                     selectedValue={selectedEmpresa}
@@ -35,11 +39,11 @@ export default function Inicio({ navigation, route }) {
 
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText} onPress={() => comprar()}>Compra</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => comprar()}>
+                        <Image source={require('../Imagens/compra.png')} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Contratação</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => contratacao()}>
+                        <Image source={require('../Imagens/contratacao.png')} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -86,20 +90,27 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
+       // alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
-        marginTop: 20,
+        //width: '100%',
+       // marginTop: 20,
     },
     button: {
-        backgroundColor: '#282424',
+        backgroundColor: '#F6F6F6',
         padding: 10,
         borderRadius: 10,
         marginHorizontal: 10,
         alignItems: 'center',
         justifyContent: 'center',
         width: 150,
-        height: 100
+        height: 100,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
     },
     buttonText: {
         color: 'white',

@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { getDatabase, ref, query, equalTo, get } from "firebase/database";
 import Topo from "./componentes/Topo";
 
-export default function Compra({ navigation, route }) {
+export default function Contratacao({ navigation, route }) {
 
     const nome = route.params.nome;
     const [listaDados, setListaDados] = useState([]);
@@ -20,8 +20,8 @@ export default function Compra({ navigation, route }) {
         navigation.navigate("Inicio", { nome })
     };
 
-    const novaCompra = () => {
-        navigation.navigate("NovaCompra", { nome, empresaSelecionada })
+    const novaContratacao = () => {
+        navigation.navigate("NovaContratacao", { nome, empresaSelecionada })
     };
 
     const minhasSolicitacoes = () => {
@@ -119,10 +119,10 @@ export default function Compra({ navigation, route }) {
             <Modal visible={modalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalContainer}>
                     <TouchableOpacity>
-                        <Text style={styles.modalText} onPress={() => novaCompra()}>Nova Solicitação</Text>
+                        <Text style={styles.modalText} onPress={() => novaContratacao()}>Nova Solicitação</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Text style={styles.modalText}  onPress={() => minhasSolicitacoes()}>Minhas Solicitações</Text>
+                        <Text style={styles.modalText} onPress={() => minhasSolicitacoes()}>Minhas Solicitações</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
                         <Text style={styles.modalButtonText}>Fechar</Text>

@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, 
 import { getDatabase, ref, set, push } from "firebase/database";
 import Topo from "./componentes/Topo";
 
-export default function NovaCompra({ navigation, route }) {
+export default function NovaContratacao({ navigation, route }) {
     const { nome, empresaSelecionada } = route.params;
     const { value, label } = empresaSelecionada;
     const database = getDatabase();
@@ -14,7 +14,7 @@ export default function NovaCompra({ navigation, route }) {
     const [observacao, setObservacao] = useState("");
 
     const cancelar = () => {
-        navigation.navigate("Compra", { nome })
+        navigation.navigate("Contratacao", { nome })
     };
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     backgoud: {
         flex: 1,
         alignItems: 'center',
-       // justifyContent: 'center',
+        // justifyContent: 'center',
         backgroundColor: '#f3f2f2'
     },
 
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-      //  justifyContent: 'center',
+        //  justifyContent: 'center',
         width: '80%',
         marginHorizontal: 15,
         marginTop: 15
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-       // alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'space-between',
         width: '95%',
         //position: 'absolute',

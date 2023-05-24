@@ -1,20 +1,24 @@
 import React from "react";
-import {Image, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import imagem from '../../Imagens/user.png'
 
-export default function Topo({route}){
+export default function Topo({navigation, route}){
 
     const nome = route.params.nome;
 
+    const dados = () => {
+        navigation.navigate("Dados", {nome})
+    };
 
     return <SafeAreaView style={styles.containerTopo}>
         <View style={styles.userContainer}>
-            <Text style={[styles.textoTopo, styles.negrito]}>Olá,{nome}!</Text>
+            <Text style={[styles.textoTopo, styles.negrito]}>Olá, {nome}!</Text>
             <Text style={styles.textoTopo}>Compras e Contratações UTFPR</Text>
         </View>
-        <Image style={styles.image}
-               source={imagem}
-        />
+        <TouchableOpacity onPress={() => dados()}>
+            <Image style={styles.image} source={imagem} />
+        </TouchableOpacity>
+
     </SafeAreaView>
 }
 
@@ -28,7 +32,7 @@ const styles = StyleSheet.create({
     },
     containerTopo: {
         backgroundColor: '#FFCF57',
-        flex: 0.23,
+        flex: 0.18,
         width: '100%',
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
