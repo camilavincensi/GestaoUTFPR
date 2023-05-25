@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getDatabase, ref, query, equalTo, get } from "firebase/database";
+import { getDatabase, ref, get, remove } from "firebase/database";
 import Topo from "./componentes/Topo";
 
 export default function Compra({ navigation, route }) {
@@ -9,7 +9,6 @@ export default function Compra({ navigation, route }) {
     const nome = route.params.nome;
     const [selectedEmpresa, setSelectedEmpresa] = useState('Todos');
     const [modalVisible, setModalVisible] = useState(false);
-
     const empresaSelecionada = {
         value: selectedEmpresa,
         label: getLabelFromValue(selectedEmpresa)

@@ -5,9 +5,10 @@ import imagem from '../../Imagens/user.png'
 export default function Topo({navigation, route}){
 
     const nome = route.params.nome;
-
+    const uid = route.params.uid;
+    //console.log(uid);
     const dados = () => {
-        navigation.navigate("Dados", {nome})
+        navigation.navigate("Dados", {nome, uid})
     };
 
     return <SafeAreaView style={styles.containerTopo}>

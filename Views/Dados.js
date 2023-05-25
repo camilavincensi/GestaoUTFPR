@@ -1,21 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Topo from "./componentes/Topo";
-import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {Link} from "@react-navigation/native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Link } from "@react-navigation/native";
 import LoginScreen from "./Login";
+import { getDatabase, ref, get } from "firebase/database";
 
-export default function Dados({ route, navigation}){
+export default function Dados({ route, navigation }) {
+    const database = getDatabase();
+    const { nome, uid } = route.params;
+    const [departamento, setDepartamento] = useState('');
+    const [dataadmissao, setDataAdmissao] = useState('');
+  
+    useEffect(() => {
+        const obterDados = async () => {
+          try {
+            const dadosRef = ref(database, 'user/' + uid);
+            const snapshot = await get(dadosRef);
 
-    const nome = route.params.nome;
+            if (snapshot.exists()) {
+              const dados = snapshot.val();
+              setDepartamento(dados.departamento);
+              setDataAdmissao(dados.dataadmissao);
+            }
+          } catch (error) {
+            console.error('Erro ao obter os dados do banco de dados:', error);
+          }
+        };
+    
+        obterDados();
+      }, [database, uid]);
 
     const inicio = () => {
-        navigation.navigate("Inicio", { nome })
+        navigation.navigate("Inicio", { nome, uid })
     };
 
     const loginScreen = () => {
         navigation.navigate("Login", { nome })
-    };
-
+    }; 
 
     return (
         <View style={styles.backgoud}>
@@ -23,9 +44,13 @@ export default function Dados({ route, navigation}){
 
             <View style={styles.container}>
                 <Text style={styles.texto}>Nome</Text>
-                <Text style={styles.texto}>Departamento</Text>
+                <Text>{nome}</Text>
+                <Text style={styles.texto}>Departamento: </Text>
+                <Text>{departamento}</Text>
                 <Text style={styles.texto}>N° de Solicitações</Text>
+                <Text>0</Text>
                 <Text style={styles.texto}>Data de Admissão</Text>
+                <Text>{dataadmissao}</Text>
 
                 <TouchableOpacity style={styles.buttonSair} onPress={() => loginScreen()}>
                     <Text style={styles.textoSair}>Sair</Text>
@@ -68,7 +93,7 @@ const styles = StyleSheet.create({
         width: '100%',
         bottom: 70,
     },
-    textoSair:{
+    textoSair: {
         fontSize: 17,
         fontWeight: 'bold',
         color: '#fff',

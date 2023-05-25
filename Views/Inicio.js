@@ -6,9 +6,11 @@ import Topo from "./componentes/Topo";
 export default function Inicio({ navigation, route }) {
 
     const nome = route.params.nome;
+    const uid = route.params.uid;
 
+    console.log("uid = " + uid)
     const comprar = () => {
-        navigation.navigate("Compra", { nome, selectedEmpresa })
+        navigation.navigate("Compra", { nome, selectedEmpresa, uid })
     };
 
     const contratacao = () => {
