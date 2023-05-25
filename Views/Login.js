@@ -16,12 +16,12 @@ export default function LoginScreen({ navigation }) {
       const auth = getAuth();
       const { user } = await signInWithEmailAndPassword(auth, email, password);
 
-      const userId = user.uid;
-      const userRef = ref(database, '/user/' + userId);
+      const uid = user.uid;
+      const userRef = ref(database, '/user/' + uid);
       const snapshot = await get(child(userRef, 'nome'));
       const nome = snapshot.val();
 
-      navigation.navigate("Inicio", { nome });
+      navigation.navigate("Inicio", { nome, uid });
     } catch (error) {
       console.log(error);
 
