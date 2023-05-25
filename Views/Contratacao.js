@@ -134,21 +134,23 @@ export default function Contratacao({ navigation, route }) {
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
                 </Picker>
-                <Text style={styles.listaTitulo}>LISTA DE CONTRATACOES: </Text>
-                <FlatList style={styles.flatList}
+                <Text>LISTA DE CONTRATACOES: </Text>
+                <FlatList
                     data={listaDados}
                     keyExtractor={(_, index) => index.toString()}
                     renderItem={({ item }) => (
                         <View>
-                            <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
-                            <Text style={styles.lista}>Departamento: {item.departamento}</Text>
-                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
-                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
+                            <Text>Nome Solicitante: {item.nomeSolicitante}</Text>
+                            <Text>Departamento: {item.departamento}</Text>
+                            <Text>Descrição: {item.descricaoSolicitacao}</Text>
+                            <Text>Observação: {item.observacao}</Text>
                             <TouchableOpacity
+                                style={styles.excluirButton}
                                 onPress={() => excluirItem(item.uid)}
                             >
-                                <Text style={styles.botaoExcluir}>Excluir</Text>
+                                <Text style={styles.excluirButtonText}>Excluir</Text>
                             </TouchableOpacity>
+                            <Text>-------------------------</Text>
                         </View>
                     )}
                 />
