@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getDatabase, ref, query, equalTo, get } from "firebase/database";
+import { getDatabase, ref, get, remove } from "firebase/database";
 import Topo from "./componentes/Topo";
 
 export default function Compra({ navigation, route }) {
@@ -9,7 +9,6 @@ export default function Compra({ navigation, route }) {
     const nome = route.params.nome;
     const [selectedEmpresa, setSelectedEmpresa] = useState('Todos');
     const [modalVisible, setModalVisible] = useState(false);
-
     const empresaSelecionada = {
         value: selectedEmpresa,
         label: getLabelFromValue(selectedEmpresa)
@@ -130,23 +129,22 @@ export default function Compra({ navigation, route }) {
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
                 </Picker>
-                <Text>LISTA DE COMPRAS: </Text>
-                <FlatList
+                <Text style={styles.listaTitulo}>LISTA DE COMPRAS: </Text>
+                <FlatList style={styles.flatList}
                     data={listaDados}
                     keyExtractor={(_, index) => index.toString()}
                     renderItem={({ item }) => (
                         <View>
-                            <Text>Nome Solicitante: {item.nomeSolicitante}</Text>
-                            <Text>Departamento: {item.departamento}</Text>
-                            <Text>Descrição: {item.descricaoSolicitacao}</Text>
-                            <Text>Observação: {item.observacao}</Text>
+                            <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
+                            <Text style={styles.lista}>Departamento: {item.departamento}</Text>
+                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
+                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
                             <TouchableOpacity
-                                style={styles.excluirButton}
                                 onPress={() => excluirItem(item.uid)}
                             >
-                                <Text style={styles.excluirButtonText}>Excluir</Text>
+                                <Text style={styles.botaoExcluir}>Excluir</Text>
                             </TouchableOpacity>
-                            <Text>-------------------------</Text>
+                            
                         </View>
                     )}
                 />
@@ -208,7 +206,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     container: {
-        //flex: 1.5,
+        flex: 0.82,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
@@ -275,5 +273,32 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
         fontSize: 17,
+    },
+    flatList: {
+        width: '100%',
+        height: '20%'
+    },
+    lista: {   
+        color: 'black',
+        fontSize: 17,
+    },
+    listaTitulo:{
+        marginTop: 4,
+        marginBottom: 4,
+        width: '100%',    
+        color: 'black',
+        fontSize: 17,
+        textAlign: 'center', 
+        fontWeight: 'bold',
+    },
+    botaoExcluir:{
+        backgroundColor: 'red',
+        width: '35%',    
+        color: 'white',
+        fontSize: 17,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginTop: 4,
+        borderRadius: 10,
     },
 });

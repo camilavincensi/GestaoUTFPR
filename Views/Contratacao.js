@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getDatabase, ref, query, equalTo, get } from "firebase/database";
+import { getDatabase, ref, get, remove } from "firebase/database";
 import Topo from "./componentes/Topo";
 
 export default function Contratacao({ navigation, route }) {
@@ -31,22 +31,46 @@ export default function Contratacao({ navigation, route }) {
     useEffect(() => {
         const buscarDados = async () => {
             const database = getDatabase();
-            const informacoesRef = ref(database, "empresas");
-            const queryRef = query(informacoesRef, equalTo("empresas", selectedEmpresa));
 
-            console.log("Referência:", informacoesRef.toString());
-            console.log("Empresa selecionada:", selectedEmpresa);
+            if (empresaSelecionada.value == "Todos") {
+                patch = "contratacoes";
+            } else {
+                patch = "contratacoes/" + empresaSelecionada.value;
+            };
+
+            const informacoesRef = ref(database, patch);
             try {
-                const snapshot = await get(queryRef);
+                const snapshot = await get(informacoesRef);
                 const dados = [];
 
-                console.log("Snapshot:", snapshot.val());
-                console.log("Dados:", dados);
+                if (empresaSelecionada.value == "Todos") {
+                    snapshot.forEach((childSnapshot) => {
+                        console.log(childSnapshot.key)
+                        const informacoesRefChild = ref(database, 'contratacoes/');
 
-                snapshot.forEach((childSnapshot) => {
-                    const childData = childSnapshot.val();
-                    dados.push(childData);
-                });
+                        //var parentNodeRef = informacoesRefChild.child(childSnapshot.key);
+                        //var childNodeRef = parentNodeRef.child(parentNodeRef.key);
+
+                        const variavelteste = get(child(informacoesRefChild, childSnapshot.key))
+
+                        console.log(variavelteste);
+
+                        //const snapshotChild =  get(informacoesRefChild);
+
+                        //console.log(snapshotChild)
+
+                        // snapshotChild.forEach((childSnapshotChild) => {
+                        //   const childDataChild = childSnapshotChild.val();
+                        //   dados.push(childDataChild);
+                        // });
+                    });
+                } else {
+                    snapshot.forEach((childSnapshot) => {
+                        console.log(childSnapshot.key)
+                        const childData = childSnapshot.val();
+                        dados.push(childData);
+                    });
+                }
 
                 setListaDados(dados);
             } catch (error) {
@@ -56,6 +80,24 @@ export default function Contratacao({ navigation, route }) {
 
         buscarDados();
     }, [selectedEmpresa]);
+
+    const excluirItem = (key) => {
+        const database = getDatabase();
+        const informacoesRef = ref(database, 'contratacoes/' + selectedEmpresa + '/' + key);
+
+        try {
+            remove(informacoesRef)
+                .then(() => {
+                    setListaDados(listaDados.filter(item => item.key !== key));
+                    alert('Item excluído com sucesso!');
+                })
+                .catch((error) => {
+                    console.log('Erro ao excluir o item:', error);
+                });
+        } catch (error) {
+            console.log('Erro ao excluir o item:', error);
+        }
+    };
 
     function getLabelFromValue(value) {
         switch (value) {
@@ -92,19 +134,25 @@ export default function Contratacao({ navigation, route }) {
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
                 </Picker>
+                <Text style={styles.listaTitulo}>LISTA DE CONTRATACOES: </Text>
+                <FlatList style={styles.flatList}
+                    data={listaDados}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View>
+                            <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
+                            <Text style={styles.lista}>Departamento: {item.departamento}</Text>
+                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
+                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
+                            <TouchableOpacity
+                                onPress={() => excluirItem(item.uid)}
+                            >
+                                <Text style={styles.botaoExcluir}>Excluir</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                />
             </View>
-            <FlatList
-                data={listaDados}
-                renderItem={({ item }) => (
-                    <View style={styles.container}>
-                        <Text style={styles.itemText}>{item.nomeSolicitante}</Text>
-                        <Text style={styles.itemText}>{item.departamento}</Text>
-                        <Text style={styles.itemText}>{item.descricaoSolicitante}</Text>
-                        <Text style={styles.itemText}>{item.observacao}</Text>
-                    </View>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-            />
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={() => inicio()}>
@@ -162,7 +210,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     container: {
-        //flex: 1.5,
+        flex: 0.82,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
@@ -229,5 +277,32 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
         fontSize: 17,
+    },
+        flatList: {
+        width: '100%',
+        height: '20%'
+    },
+    lista: {   
+        color: 'black',
+        fontSize: 17,
+    },
+    listaTitulo:{
+        marginTop: 4,
+        marginBottom: 4,
+        width: '100%',    
+        color: 'black',
+        fontSize: 17,
+        textAlign: 'center', 
+        fontWeight: 'bold',
+    },
+    botaoExcluir:{
+        backgroundColor: 'red',
+        width: '35%',    
+        color: 'white',
+        fontSize: 17,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginTop: 4,
+        borderRadius: 10,
     },
 });

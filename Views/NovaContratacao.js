@@ -34,21 +34,24 @@ export default function NovaContratacao({ navigation, route }) {
     }, []);
 
     const salvarInformacoes = () => {
+        const informacoesRef = push(ref(database, "contratacoes/" + value));
+        const uid = informacoesRef.key;
         const dados = {
             nomeSolicitante,
             departamento,
             descricaoSolicitacao,
             observacao,
+            uid
         };
-
-        const informacoesRef = push(ref(database, "empresas/" + value));
 
         set(informacoesRef, dados)
             .then(() => {
                 console.log("Informações salvas com sucesso!");
+                alert("Informações salvas com sucesso!");
             })
             .catch((error) => {
                 console.log("Erro ao salvar as informações:", error);
+                alert("Erro ao salvar as informações");
             });
     };
 
