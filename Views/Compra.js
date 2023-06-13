@@ -111,9 +111,10 @@ export default function Compra({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <Topo route={route} navigation={navigation} />
+
 
             <View style={styles.dropdownContainer}>
+                <Topo route={route} navigation={navigation} />
                 <Picker
                     selectedValue={selectedEmpresa}
                     onValueChange={(itemValue, itemIndex) =>
@@ -129,26 +130,31 @@ export default function Compra({ navigation, route }) {
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
                 </Picker>
+            </View>
+
+            <View style={styles.view}>
                 <Text style={styles.listaTitulo}>LISTA DE COMPRAS: </Text>
-                <FlatList style={styles.flatList}
-                    data={listaDados}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <View>
-                            <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
-                            <Text style={styles.lista}>Departamento: {item.departamento}</Text>
-                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
-                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
-                            <TouchableOpacity
-                                onPress={() => excluirItem(item.uid)}
-                            >
-                                <Text style={styles.botaoExcluir}>Excluir</Text>
-                            </TouchableOpacity>
-                            
-                        </View>
-                    )}
+                <FlatList
+                          data={listaDados}
+                          keyExtractor={(_, index) => index.toString()}
+                          renderItem={({ item }) => (
+                              <View style={styles.group}>
+                                  <Text style={styles.lista}>Nome Solicitante: {item.nomeSolicitante}</Text>
+                                  <Text style={styles.lista}>Departamento: {item.departamento}</Text>
+                                  <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
+                                  <Text style={styles.lista}>Observação: {item.observacao}</Text>
+                                  <TouchableOpacity
+                                      onPress={() => excluirItem(item.uid)}
+                                  >
+                                      <Text style={styles.botaoExcluir}>Excluir</Text>
+                                  </TouchableOpacity>
+
+                              </View>
+                          )}
                 />
             </View>
+
+
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={() => inicio()}>
@@ -179,6 +185,15 @@ export default function Compra({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    group:{
+      padding: 10
+    },
+    view:{
+        flex: 1,
+        padding: 10,
+        width:'100%',
+        paddingHorizontal:20
+    },
     backgoud: {
         flex: 1,
         alignItems: 'center',
@@ -193,9 +208,7 @@ const styles = StyleSheet.create({
     },
     dropdownContainer: {
         alignItems: 'center',
-        justifyContent: 'center',
         width: '100%',
-        paddingHorizontal: 20,
         borderRadius: 10,
     },
     dropdown: {
@@ -204,13 +217,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#585666',
         color: '#fff',
         fontSize: 17,
+        justifyContent: 'center',
     },
     container: {
-        flex: 0.82,
+        flex: 0.45,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
-        padding: 15
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -274,26 +287,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 17,
     },
-    flatList: {
-        width: '100%',
-        height: '20%'
-    },
-    lista: {   
+    lista: {
         color: 'black',
         fontSize: 17,
     },
     listaTitulo:{
-        marginTop: 4,
-        marginBottom: 4,
-        width: '100%',    
         color: 'black',
         fontSize: 17,
-        textAlign: 'center', 
+        textAlign: 'center',
         fontWeight: 'bold',
+        padding: 10
     },
     botaoExcluir:{
         backgroundColor: 'red',
-        width: '35%',    
+        width: '35%',
         color: 'white',
         fontSize: 17,
         textAlign: 'center',
