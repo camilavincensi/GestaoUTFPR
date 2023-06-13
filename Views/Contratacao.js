@@ -116,8 +116,7 @@ export default function Contratacao({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <Topo route={route} navigation={navigation}/>
-
+            
             <View style={styles.dropdownContainer}>
                 <Picker
                     selectedValue={selectedEmpresa}
@@ -183,6 +182,15 @@ export default function Contratacao({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    group:{
+      padding: 10
+    },
+    view:{
+        flex: 1,
+        padding: 10,
+        width:'100%',
+        paddingHorizontal:20
+    },
     backgoud: {
         flex: 1,
         alignItems: 'center',
@@ -197,9 +205,7 @@ const styles = StyleSheet.create({
     },
     dropdownContainer: {
         alignItems: 'center',
-        justifyContent: 'center',
         width: '100%',
-        paddingHorizontal: 20,
         borderRadius: 10,
     },
     dropdown: {
@@ -208,13 +214,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#585666',
         color: '#fff',
         fontSize: 17,
+        justifyContent: 'center',
     },
     container: {
         flex: 0.82,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
-        padding: 15
     },
     buttonContainer: {
         flexDirection: 'row',
