@@ -130,27 +130,24 @@ export default function Compra({ navigation, route }) {
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
                 </Picker>
-            </View>
-
-            <View style={styles.view}>
                 <Text style={styles.listaTitulo}>LISTA DE COMPRAS: </Text>
-                <FlatList
-                          data={listaDados}
-                          keyExtractor={(_, index) => index.toString()}
-                          renderItem={({ item }) => (
-                              <View style={styles.group}>
-                                  <Text style={styles.lista}>Nome Solicitante: {item.nomeSolicitante}</Text>
-                                  <Text style={styles.lista}>Departamento: {item.departamento}</Text>
-                                  <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
-                                  <Text style={styles.lista}>Observação: {item.observacao}</Text>
-                                  <TouchableOpacity
-                                      onPress={() => excluirItem(item.uid)}
-                                  >
-                                      <Text style={styles.botaoExcluir}>Excluir</Text>
-                                  </TouchableOpacity>
-
-                              </View>
-                          )}
+                <FlatList style={styles.flatList}
+                    data={listaDados}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View>
+                            <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
+                            <Text style={styles.lista}>Departamento: {item.departamento}</Text>
+                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
+                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
+                            <TouchableOpacity
+                                onPress={() => excluirItem(item.uid)}
+                            >
+                                <Text style={styles.botaoExcluir}>Excluir</Text>
+                            </TouchableOpacity>
+                            
+                        </View>
+                    )}
                 />
             </View>
 
@@ -220,7 +217,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     container: {
-        flex: 0.45,
+        flex: 0.82,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
@@ -287,20 +284,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 17,
     },
-    lista: {
+    flatList: {
+        width: '100%',
+        height: '20%'
+    },
+    lista: {   
         color: 'black',
         fontSize: 17,
     },
     listaTitulo:{
+        marginTop: 4,
+        marginBottom: 4,
+        width: '100%',    
         color: 'black',
         fontSize: 17,
-        textAlign: 'center',
+        textAlign: 'center', 
         fontWeight: 'bold',
-        padding: 10
     },
     botaoExcluir:{
         backgroundColor: 'red',
-        width: '35%',
+        width: '35%',    
         color: 'white',
         fontSize: 17,
         textAlign: 'center',
