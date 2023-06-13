@@ -4,12 +4,16 @@ import { getDatabase, ref, set, push } from "firebase/database";
 import Topo from "./componentes/Topo";
 
 export default function NovaContratacao({ navigation, route }) {
-    const { nome, empresaSelecionada } = route.params;
+    const nome = route.params.nome;
+    const empresaSelecionada = route.params.empresaSelecionada
+    const uidUsuario = route.params.uid;
+    const departamento = route.params.departamento;
+
     const { value, label } = empresaSelecionada;
     const database = getDatabase();
 
-    const [nomeSolicitante, setNomeSolicitante] = useState("");
-    const [departamento, setDepartamento] = useState("");
+    const [nomeSolicitante, setNomeSolicitante] = useState(nome);
+    const [departamentoSolicitante, setDepartamento] = useState(departamento);
     const [descricaoSolicitacao, setDescricaoSolicitacao] = useState("");
     const [observacao, setObservacao] = useState("");
 
@@ -34,14 +38,17 @@ export default function NovaContratacao({ navigation, route }) {
     }, []);
 
     const salvarInformacoes = () => {
-        const informacoesRef = push(ref(database, "contratacoes/" + value));
-        const uid = informacoesRef.key;
+        const informacoesRef = push(ref(database, "contratacoes"));
+        const uidContratacao = informacoesRef.key;
+        const idempresa = value;
         const dados = {
             nomeSolicitante,
-            departamento,
+            departamentoSolicitante,
             descricaoSolicitacao,
             observacao,
-            uid
+            idempresa,
+            uidContratacao,
+            uidUsuario
         };
 
         set(informacoesRef, dados)
@@ -57,14 +64,14 @@ export default function NovaContratacao({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <Topo route={route} navigation={navigation}/>
+            <Topo route={route} navigation={navigation} />
 
             <View style={styles.container}>
                 <Text style={styles.texto}>Nome do solicitante</Text>
-                <TextInput style={styles.input} placeholder="Digite aqui" value={nomeSolicitante} onChangeText={setNomeSolicitante} />
+                <TextInput style={styles.input} placeholder={nome} value={nomeSolicitante} onChangeText={setNomeSolicitante} />
 
                 <Text style={styles.texto}>Departamento</Text>
-                <TextInput style={styles.input} placeholder="Digite aqui" value={departamento} onChangeText={setDepartamento} />
+                <TextInput style={styles.input} placeholder={departamento} value={departamentoSolicitante} onChangeText={setDepartamento} />
 
                 <Text style={styles.texto}>Descrição da solicitação</Text>
                 <TextInput style={styles.input} placeholder="Digite aqui" value={descricaoSolicitacao} onChangeText={setDescricaoSolicitacao} />

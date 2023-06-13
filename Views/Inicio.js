@@ -7,14 +7,14 @@ export default function Inicio({ navigation, route }) {
 
     const nome = route.params.nome;
     const uid = route.params.uid;
+    const departamento = route.params.departamento;
 
-    console.log("uid = " + uid)
     const comprar = () => {
-        navigation.navigate("Compra", { nome, selectedEmpresa, uid })
+        navigation.navigate("Compra", { nome, selectedEmpresa, uid, departamento })
     };
 
     const contratacao = () => {
-        navigation.navigate("Contratacao", { nome, selectedEmpresa })
+        navigation.navigate("Contratacao", { nome, selectedEmpresa, uid, departamento })
     };
 
     const [selectedEmpresa, setSelectedEmpresa] = useState('Todos');

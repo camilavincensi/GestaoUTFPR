@@ -18,10 +18,13 @@ export default function LoginScreen({ navigation }) {
 
       const uid = user.uid;
       const userRef = ref(database, '/user/' + uid);
-      const snapshot = await get(child(userRef, 'nome'));
-      const nome = snapshot.val();
+      const snapshotNome = await get(child(userRef, 'nome'));
+      const nome = snapshotNome.val();
 
-      navigation.navigate("Inicio", { nome, uid });
+      const snapshotDep = await get(child(userRef, 'departamento'));
+      const departamento = snapshotDep.val();
+
+      navigation.navigate("Inicio", { nome, uid, departamento });
     } catch (error) {
       console.log(error);
 

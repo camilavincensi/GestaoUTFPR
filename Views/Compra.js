@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
+import { Text, View, StyleSheet, KeyboardAvoidingView, Image, TouchableOpacity, Modal, FlatList, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { getDatabase, ref, get, remove } from "firebase/database";
+import { getDatabase, ref, get, remove, query, orderByChild, equalTo } from "firebase/database";
 import Topo from "./componentes/Topo";
 
 export default function Compra({ navigation, route }) {
-    const [listaDados, setListaDados] = useState([]);
     const nome = route.params.nome;
+    const uid = route.params.uid;
+    const departamento = route.params.departamento;
+
+    const [listaDados, setListaDados] = useState([]);
     const [selectedEmpresa, setSelectedEmpresa] = useState('Todos');
     const [modalVisible, setModalVisible] = useState(false);
     const empresaSelecionada = {
@@ -15,75 +18,87 @@ export default function Compra({ navigation, route }) {
     };
 
     const inicio = () => {
-        navigation.navigate("Inicio", { nome })
+        navigation.navigate("Inicio", { nome, uid, departamento })
     };
 
     const novaCompra = () => {
-        navigation.navigate("NovaCompra", { nome, empresaSelecionada })
+        navigation.navigate("NovaCompra", { nome, empresaSelecionada, uid, departamento })
     };
 
-    useEffect(() => {
-        const buscarDados = async () => {
-            const database = getDatabase();
+    const MinhasCompras = () => {
+        navigation.navigate("MinhasCompras", { nome, uid, departamento })
+    };
 
-            if (empresaSelecionada.value == "Todos") {
-                patch = "empresas";
-            } else {
-                patch = "empresas/" + empresaSelecionada.value;
-            };
+    const buscarDados = async () => {
+        const database = getDatabase();
 
-            const informacoesRef = ref(database, patch);
+        const patch = "compras";
+        const informacoesRef = ref(database, patch);
+
+        if (selectedEmpresa === 'Todos') {
             try {
                 const snapshot = await get(informacoesRef);
                 const dados = [];
 
-                if (empresaSelecionada.value == "Todos") {
-                    snapshot.forEach((childSnapshot) => {
-                        console.log(childSnapshot.key)
-                        const informacoesRefChild = ref(database, 'empresas/');
-
-                        //var parentNodeRef = informacoesRefChild.child(childSnapshot.key);
-                        //var childNodeRef = parentNodeRef.child(parentNodeRef.key);
-
-                        const variavelteste = get(child(informacoesRefChild, childSnapshot.key))
-
-                        console.log(variavelteste);
-
-                        //const snapshotChild =  get(informacoesRefChild);
-
-                        //console.log(snapshotChild)
-
-                        // snapshotChild.forEach((childSnapshotChild) => {
-                        //   const childDataChild = childSnapshotChild.val();
-                        //   dados.push(childDataChild);
-                        // });
-                    });
-                } else {
-                    snapshot.forEach((childSnapshot) => {
-                        console.log(childSnapshot.key)
-                        const childData = childSnapshot.val();
-                        dados.push(childData);
-                    });
-                }
+                snapshot.forEach((childSnapshot) => {
+                    const childData = childSnapshot.val();
+                    dados.push(childData);
+                });
 
                 setListaDados(dados);
             } catch (error) {
                 console.log("Erro ao buscar os dados:", error);
             }
-        };
+        } else {
+            const dadosFiltrados = query(informacoesRef, orderByChild('idempresa'), equalTo(selectedEmpresa));
+            try {
+                const snapshot = await get(dadosFiltrados);
+                const dados = [];
 
+                snapshot.forEach((childSnapshot) => {
+                    const childData = childSnapshot.val();
+                    dados.push(childData);
+                });
+
+                setListaDados(dados);
+            } catch (error) {
+                console.log("Erro ao buscar os dados:", error);
+            }
+        }
+    };
+
+    useEffect(() => {
         buscarDados();
     }, [selectedEmpresa]);
 
-    const excluirItem = (key) => {
-        console.log(key);
+    const excluirItem = (uidCompra) => {
+        Alert.alert(
+            'Confirmação',
+            'Deseja excluir a compra?',
+            [
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Excluir',
+                    onPress: () => excluirItemConfirmado(uidCompra),
+                    style: 'destructive',
+                },
+            ],
+        );
+    };
+
+    const excluirItemConfirmado = (uidCompra) => {
         const database = getDatabase();
-        const informacoesRef = ref(database, 'empresas/' + selectedEmpresa + '/' + key);
+        const informacoesRef = ref(database, 'compras/' + uidCompra);
+
+        console.log(uidCompra)
 
         try {
             remove(informacoesRef)
                 .then(() => {
-                    setListaDados(listaDados.filter(item => item.key !== key));
+                    setListaDados(listaDados.filter(item => item.uidCompra !== uidCompra));
                     alert('Item excluído com sucesso!');
                 })
                 .catch((error) => {
@@ -98,16 +113,20 @@ export default function Compra({ navigation, route }) {
         switch (value) {
             case 'Todos':
                 return 'UTFPR - Todos';
-            case 'Dois Vizinhos':
+            case 'DV':
                 return 'UTFPR - Dois Vizinhos';
-            case 'Francisco Beltrão':
+            case 'FB':
                 return 'UTFPR - Francisco Beltrão';
-            case 'Pato Branco':
+            case 'PB':
                 return 'UTFPR - Pato Branco';
             default:
                 return '';
         }
     }
+
+    useEffect(() => {
+        buscarDados();
+    }, []);
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
@@ -125,7 +144,7 @@ export default function Compra({ navigation, route }) {
                     itemStyle={{ color: 'white' }}
                 >
 
-                    <Picker.Item style={styles.dropdown} label="UTFPR - Todos" value="All" />
+                    <Picker.Item style={styles.dropdown} label="UTFPR - Todos" value="Todos" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Dois Vizinhos" value="DV" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
                     <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
@@ -135,22 +154,23 @@ export default function Compra({ navigation, route }) {
             <View style={styles.view}>
                 <Text style={styles.listaTitulo}>LISTA DE COMPRAS: </Text>
                 <FlatList
-                          data={listaDados}
-                          keyExtractor={(_, index) => index.toString()}
-                          renderItem={({ item }) => (
-                              <View style={styles.group}>
-                                  <Text style={styles.lista}>Nome Solicitante: {item.nomeSolicitante}</Text>
-                                  <Text style={styles.lista}>Departamento: {item.departamento}</Text>
-                                  <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
-                                  <Text style={styles.lista}>Observação: {item.observacao}</Text>
-                                  <TouchableOpacity
-                                      onPress={() => excluirItem(item.uid)}
-                                  >
-                                      <Text style={styles.botaoExcluir}>Excluir</Text>
-                                  </TouchableOpacity>
+                    data={listaDados}
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.group}>
+                            <Text style={[styles.lista, { borderTopWidth: 1, marginTop: 4 }]}>Nome Solicitante: {item.nomeSolicitante}</Text>
+                            <Text style={styles.lista}>Departamento: {item.departamentoSolicitante}</Text>
+                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
+                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
+                            <Text style={styles.lista}>Empresa: {item.idempresa}</Text>
+                            <TouchableOpacity
+                                onPress={() => excluirItem(item.uidCompra)}
+                            >
+                                <Text style={styles.botaoExcluir}>Excluir</Text>
+                            </TouchableOpacity>
 
-                              </View>
-                          )}
+                        </View>
+                    )}
                 />
             </View>
 
@@ -172,7 +192,7 @@ export default function Compra({ navigation, route }) {
                         <Text style={styles.modalText} onPress={() => novaCompra()}>Nova Solicitação</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Text style={styles.modalText} onPress={() => minhasSolicitacoes()}>Minhas Solicitações</Text>
+                        <Text style={styles.modalText} onPress={() => MinhasCompras()}>Minhas Solicitações</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
                         <Text style={styles.modalButtonText}>Fechar</Text>
@@ -185,14 +205,14 @@ export default function Compra({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    group:{
-      padding: 10
+    group: {
+        padding: 10
     },
-    view:{
+    view: {
         flex: 1,
         padding: 10,
-        width:'100%',
-        paddingHorizontal:20
+        width: '100%',
+        paddingHorizontal: 20
     },
     backgoud: {
         flex: 1,
@@ -291,14 +311,14 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 17,
     },
-    listaTitulo:{
+    listaTitulo: {
         color: 'black',
         fontSize: 17,
         textAlign: 'center',
         fontWeight: 'bold',
         padding: 10
     },
-    botaoExcluir:{
+    botaoExcluir: {
         backgroundColor: 'red',
         width: '35%',
         color: 'white',
