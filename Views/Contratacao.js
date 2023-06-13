@@ -118,40 +118,43 @@ export default function Contratacao({ navigation, route }) {
         <KeyboardAvoidingView style={styles.backgoud}>
             
             <View style={styles.dropdownContainer}>
-                <Picker
-                    selectedValue={selectedEmpresa}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setSelectedEmpresa(itemValue)
-                    } style={styles.dropdown}
-                    dropdownIconColor={'white'}
-                    mode={'dropdown'}
-                    itemStyle={{ color: 'white' }}
-                >
-
-                    <Picker.Item style={styles.dropdown} label="UTFPR - Todos" value="All" />
-                    <Picker.Item style={styles.dropdown} label="UTFPR - Dois Vizinhos" value="DV" />
-                    <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
-                    <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
-                </Picker>
-                <Text style={styles.listaTitulo}>LISTA DE CONTRATACOES: </Text>
-                <FlatList style={styles.flatList}
-                    data={listaDados}
-                    keyExtractor={(_, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <View>
-                            <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
-                            <Text style={styles.lista}>Departamento: {item.departamento}</Text>
-                            <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
-                            <Text style={styles.lista}>Observação: {item.observacao}</Text>
-                            <TouchableOpacity
-                                onPress={() => excluirItem(item.uid)}
-                            >
-                                <Text style={styles.botaoExcluir}>Excluir</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                />
-            </View>
+                <Topo route={route} navigation={navigation}/>
+                    <Picker
+                        selectedValue={selectedEmpresa}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setSelectedEmpresa(itemValue)
+                        } style={styles.dropdown}
+                        dropdownIconColor={'white'}
+                        mode={'dropdown'}
+                        itemStyle={{ color: 'white' }}
+                    >
+                        <Picker.Item style={styles.dropdown} label="UTFPR - Todos" value="All" />
+                        <Picker.Item style={styles.dropdown} label="UTFPR - Dois Vizinhos" value="DV" />
+                        <Picker.Item style={styles.dropdown} label="UTFPR - Francisco Beltrão" value="FB" />
+                        <Picker.Item style={styles.dropdown} label="UTFPR - Pato Branco" value="PB" />
+                    </Picker>
+                </View>
+                <View style={styles.view}>
+                    <Text style={styles.listaTitulo}>LISTA DE CONTRATACOES: </Text>
+                    <FlatList style={styles.flatList}
+                        data={listaDados}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <View style={styles.group}>
+                                <Text style={[styles.lista, {borderTopWidth : 1, marginTop: 4}]}>Nome Solicitante: {item.nomeSolicitante}</Text>
+                                <Text style={styles.lista}>Departamento: {item.departamento}</Text>
+                                <Text style={styles.lista}>Descrição: {item.descricaoSolicitacao}</Text>
+                                <Text style={styles.lista}>Observação: {item.observacao}</Text>
+                                <TouchableOpacity
+                                    onPress={() => excluirItem(item.uid)}
+                                >
+                                    <Text style={styles.botaoExcluir}>Excluir</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    />
+                </View>
+            
             <View style={styles.container}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.button} onPress={() => inicio()}>
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     container: {
-        flex: 0.82,
+        flex: 0.45,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
@@ -284,26 +287,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 17,
     },
-        flatList: {
-        width: '100%',
-        height: '20%'
-    },
-    lista: {   
+    lista: {
         color: 'black',
         fontSize: 17,
     },
     listaTitulo:{
-        marginTop: 4,
-        marginBottom: 4,
-        width: '100%',    
         color: 'black',
         fontSize: 17,
-        textAlign: 'center', 
+        textAlign: 'center',
         fontWeight: 'bold',
+        padding: 10
     },
     botaoExcluir:{
         backgroundColor: 'red',
-        width: '35%',    
+        width: '35%',
         color: 'white',
         fontSize: 17,
         textAlign: 'center',
