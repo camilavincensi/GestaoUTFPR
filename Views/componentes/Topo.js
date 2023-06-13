@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     },
     containerTopo: {
         backgroundColor: '#FFCF57',
-        flex: 0.18,
         width: '100%',
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
