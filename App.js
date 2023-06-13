@@ -8,7 +8,8 @@ import NovaCompra from '../ProjPD/Views/NovaCompra';
 import Dados from "./Views/Dados";
 import NovaContratacao from "./Views/NovaContratacao";
 import Contratacao from "./Views/Contratacao";
-import MinhasSolicitacoes from "./Views/MinhasSolicitacoes";
+import MinhasCompras from "./Views/MinhasCompras";
+import MinhasContratacoes from "./Views/MinhasContratacoes";
 
 const Stack = createStackNavigator();
 
@@ -43,7 +44,11 @@ function MyStack() {
           options={{
           headerShown: false,
         }} />
-        <Stack.Screen name="MinhasSolicitacoes" component={MinhasSolicitacoes}
+        <Stack.Screen name="MinhasCompras" component={MinhasCompras}
+          options={{
+          headerShown: false,
+        }} />
+        <Stack.Screen name="MinhasContratacoes" component={MinhasContratacoes}
           options={{
           headerShown: false,
         }} />
