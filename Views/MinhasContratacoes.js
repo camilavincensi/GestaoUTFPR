@@ -26,8 +26,6 @@ export default function MinhasContratacoes({ route, navigation }) {
             const snapshot = await get(dadosFiltrados);
             const dados = [];
 
-            console.log(uid)
-            
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
                 dados.push(childData);

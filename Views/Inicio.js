@@ -21,7 +21,7 @@ export default function Inicio({ navigation, route }) {
 
     return (
         <KeyboardAvoidingView style={styles.backgoud}>
-            <Topo route={route} navigation={navigation}/>
+            <Topo route={route} navigation={navigation} />
             <View style={styles.dropdownContainer}>
                 <Picker
                     selectedValue={selectedEmpresa}
@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-       // alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'center',
         //width: '100%',
-       // marginTop: 20,
+        // marginTop: 20,
     },
     button: {
         backgroundColor: '#F6F6F6',

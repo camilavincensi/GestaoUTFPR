@@ -90,10 +90,9 @@ export default function Compra({ navigation, route }) {
     };
 
     const excluirItemConfirmado = (uidCompra) => {
+
         const database = getDatabase();
         const informacoesRef = ref(database, 'compras/' + uidCompra);
-
-        console.log(uidCompra)
 
         try {
             remove(informacoesRef)

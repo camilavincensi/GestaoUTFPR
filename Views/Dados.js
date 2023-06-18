@@ -1,34 +1,38 @@
 import React, { useState, useEffect } from "react";
 import Topo from "./componentes/Topo";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Link } from "@react-navigation/native";
-import LoginScreen from "./Login";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, query, orderByChild, equalTo } from "firebase/database";
+import { getAuth, signOut } from 'firebase/auth';
 
 export default function Dados({ route, navigation }) {
     const database = getDatabase();
     const { nome, uid } = route.params;
     const [departamento, setDepartamento] = useState('');
     const [dataadmissao, setDataAdmissao] = useState('');
-  
+
+    const [listaDadosCompras, setListaDadosCompras] = useState([]);
+    const [listaDadosContratacoes, setListaDadosContratacoes] = useState([]);
+    const [totalRegistrosCompras, setTotalRegistrosCompras] = useState(0);
+    const [totalRegistrosContratacoes, setTotalRegistrosContratacoes] = useState(0);
+
     useEffect(() => {
         const obterDados = async () => {
-          try {
-            const dadosRef = ref(database, 'user/' + uid);
-            const snapshot = await get(dadosRef);
+            try {
+                const dadosRef = ref(database, 'user/' + uid);
+                const snapshot = await get(dadosRef);
 
-            if (snapshot.exists()) {
-              const dados = snapshot.val();
-              setDepartamento(dados.departamento);
-              setDataAdmissao(dados.dataadmissao);
+                if (snapshot.exists()) {
+                    const dados = snapshot.val();
+                    setDepartamento(dados.departamento);
+                    setDataAdmissao(dados.dataadmissao);
+                }
+            } catch (error) {
+                console.error('Erro ao obter os dados do banco de dados:', error);
             }
-          } catch (error) {
-            console.error('Erro ao obter os dados do banco de dados:', error);
-          }
         };
-    
+
         obterDados();
-      }, [database, uid]);
+    }, [database, uid]);
 
     const inicio = () => {
         navigation.navigate("Inicio", { nome, uid })
@@ -36,7 +40,60 @@ export default function Dados({ route, navigation }) {
 
     const loginScreen = () => {
         navigation.navigate("Login", { nome })
-    }; 
+    };
+
+    const handleLogout = async () => {
+        const auth = getAuth();
+        try {
+            await signOut(auth);
+            loginScreen();
+        } catch (error) {
+            console.log('Erro ao fazer logout:', error);
+        }
+    };
+
+    const buscarDados = async () => {
+        const database = getDatabase();
+
+        const comprasPatch = "compras";
+        const contratacoesPatch = "contratacoes";
+
+        const comprasRef = ref(database, comprasPatch);
+        const contratacoesRef = ref(database, contratacoesPatch);
+
+        const comprasFiltradas = query(comprasRef, orderByChild('uidUsuario'), equalTo(uid));
+        const contratacoesFiltradas = query(contratacoesRef, orderByChild('uidUsuario'), equalTo(uid));
+
+        try {
+            const comprasSnapshot = await get(comprasFiltradas);
+            const contratacoesSnapshot = await get(contratacoesFiltradas);
+
+            const comprasDados = [];
+            const contratacoesDados = [];
+
+            comprasSnapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                comprasDados.push(childData);
+            });
+
+            contratacoesSnapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                contratacoesDados.push(childData);
+            });
+
+            setListaDadosCompras(comprasDados);
+            setListaDadosContratacoes(contratacoesDados);
+
+            setTotalRegistrosCompras(comprasDados.length);
+            setTotalRegistrosContratacoes(contratacoesDados.length);
+        } catch (error) {
+            console.log("Erro ao buscar os dados:", error);
+        }
+    };
+
+    useEffect(() => {
+        buscarDados();
+    }, []);
 
     return (
         <View style={styles.backgoud}>
@@ -47,12 +104,14 @@ export default function Dados({ route, navigation }) {
                 <Text>{nome}</Text>
                 <Text style={styles.texto}>Departamento: </Text>
                 <Text>{departamento}</Text>
-                <Text style={styles.texto}>N° de Solicitações</Text>
-                <Text>0</Text>
+                <Text style={styles.texto}>N° de Compras</Text>
+                <Text>{totalRegistrosCompras}</Text>
+                <Text style={styles.texto}>N° de Contratações</Text>
+                <Text>{totalRegistrosContratacoes}</Text>
                 <Text style={styles.texto}>Data de Admissão</Text>
                 <Text>{dataadmissao}</Text>
 
-                <TouchableOpacity style={styles.buttonSair} onPress={() => loginScreen()}>
+                <TouchableOpacity style={styles.buttonSair} onPress={() => handleLogout()}>
                     <Text style={styles.textoSair}>Sair</Text>
                 </TouchableOpacity>
             </View>
