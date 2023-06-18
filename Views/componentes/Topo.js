@@ -1,14 +1,13 @@
 import React from "react";
-import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import imagem from '../../Imagens/user.png'
 
-export default function Topo({navigation, route}){
+export default function Topo({ navigation, route }) {
 
     const nome = route.params.nome;
     const uid = route.params.uid;
-    //console.log(uid);
     const dados = () => {
-        navigation.navigate("Dados", {nome, uid})
+        navigation.navigate("Dados", { nome, uid })
     };
 
     return <SafeAreaView style={styles.containerTopo}>
@@ -25,7 +24,7 @@ export default function Topo({navigation, route}){
 
 
 const styles = StyleSheet.create({
-    image:{
+    image: {
         width: 57,
         height: 57,
         marginVertical: 30,

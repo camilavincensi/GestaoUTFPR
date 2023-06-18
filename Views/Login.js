@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, KeyboardAvoidingView, Image, Animated, Keyboard, SafeAreaView } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import firebase from '../firebaseConfig';
-import { getDatabase, ref, set, get, child, remove } from "firebase/database";
+import { getDatabase, ref, get, child } from "firebase/database";
 
 export default function LoginScreen({ navigation }) {
 
@@ -108,8 +108,8 @@ export default function LoginScreen({ navigation }) {
       <Animated.View style={[styles.container]}>
         <View>
           <Image
-              source={require('../Imagens/logoOK.png')}
-              style={styles.logoOK}
+            source={require('../Imagens/logoOK.png')}
+            style={styles.logoOK}
           />
         </View>
 
@@ -141,23 +141,23 @@ export default function LoginScreen({ navigation }) {
 
 
 const styles = StyleSheet.create({
-  versao:{
+  versao: {
     paddingTop: 150,
     fontSize: 15,
     fontWeight: 'bold'
   },
-  logoOK:{
+  logoOK: {
     height: 70,
-    width:350,
+    width: 350,
     marginHorizontal: 18,
     marginVertical: 60
   },
-  imagem:{
+  imagem: {
     height: 209,
     width: 384,
   },
   backgoud: {
-    flex:1,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFCF57',
